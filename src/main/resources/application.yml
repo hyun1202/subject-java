@@ -10,3 +10,6 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     username: ${DB_USERNAME}
     url: jdbc:mariadb://${DB_HOST}:${DB_PORT}/${DB_DATABASE}?characterEncoding=UTF-8&serverTimezone=UTC
+
+jwt:
+  secret: ${JWT_SECRET}
