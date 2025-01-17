@@ -35,8 +35,10 @@ public class SecurityConfig {
         http.httpBasic(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(authorize -> {
-            authorize.requestMatchers("/signup", "/sign")
-                    .permitAll();
+            authorize
+                    .requestMatchers("/signup", "/sign").permitAll()
+                    .requestMatchers("/v3/**", "/api-spec/**", "/swagger-ui/**").permitAll()
+            ;
         });
 
         http.addFilterAt(new JwtFilter(tokenProvider), BasicAuthenticationFilter.class);
