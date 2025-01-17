@@ -20,9 +20,17 @@ import java.util.List;
 @Component
 public class TokenProvider {
     private static final String AUTHORITIES_KEY = "auth";
-    private final long tokenValidityInMilliseconds = 60 * 1000L;
-    private final long refreshTokenValidMillisecond = 14 * 24 * 60 * 60 * 1000L;
+    private long tokenValidityInMilliseconds = 60 * 1000L;
+    private long refreshTokenValidMillisecond = 14 * 24 * 60 * 60 * 1000L;
     private Key key;
+
+    public void setAccessTokenExp(long exp) {
+        this.tokenValidityInMilliseconds = exp;
+    }
+
+    public void setRefreshTokenExp(long exp) {
+        this.refreshTokenValidMillisecond = exp;
+    }
 
     public TokenProvider(@Value("${jwt.secret}") String secret) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
