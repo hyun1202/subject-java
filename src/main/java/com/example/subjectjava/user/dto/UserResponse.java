@@ -1,4 +1,6 @@
-package com.example.subjectjava.user;
+package com.example.subjectjava.user.dto;
+
+import com.example.subjectjava.user.User;
 
 import java.util.List;
 

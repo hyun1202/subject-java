@@ -2,6 +2,10 @@ package com.example.subjectjava.user;
 
 import com.example.subjectjava.security.jwt.TokenDto;
 import com.example.subjectjava.security.jwt.TokenProvider;
+import com.example.subjectjava.user.dto.SignRequest;
+import com.example.subjectjava.user.dto.UserRequest;
+import com.example.subjectjava.user.dto.UserResponse;
+import com.example.subjectjava.user.dto.UserSignResponse;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,10 +36,14 @@ public class UserService {
     }
 
     @Transactional
-    public UserSignResponse sign(UserRequest req) {
+    public UserSignResponse sign(SignRequest req) {
 
         User user = userRepository.findByUsername(req.username())
                 .orElseThrow(() -> new IllegalArgumentException(req.username() + "은 존재하지 않는 사용자입니다."));
+
+        if (!passwordEncoder.matches(req.password(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 틀립니다.");
+        }
 
         TokenDto tokenDto = tokenProvider.createTokenDto(user.getUsername(), user.getAuthorities());
 

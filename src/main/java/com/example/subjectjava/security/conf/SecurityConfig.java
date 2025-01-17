@@ -30,14 +30,15 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http.csrf(AbstractHttpConfigurer::disable);
         http.sessionManagement(sessionManagementConfigurer -> sessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.formLogin(AbstractHttpConfigurer::disable);
         http.httpBasic(AbstractHttpConfigurer::disable);
 
         http.authorizeHttpRequests(authorize -> {
-            authorize
-                    .requestMatchers("/signup", "/sign").permitAll()
+            authorize.requestMatchers("/signup/**", "/sign/**").permitAll()
                     .requestMatchers("/v3/**", "/api-spec/**", "/swagger-ui/**").permitAll()
+                    .anyRequest().authenticated();
             ;
         });
 
