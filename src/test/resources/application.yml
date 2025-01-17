@@ -1,0 +1,15 @@
+spring:
+  jpa:
+    properties:
+      hibernate:
+        format_sql: 'true'
+    hibernate:
+      ddl-auto: update
+  datasource:
+    password: user
+    driver-class-name: org.mariadb.jdbc.Driver
+    username: user
+    url: jdbc:mariadb://localhost:3306/sideproject?characterEncoding=UTF-8&serverTimezone=UTC
+
+jwt:
+  secret: 4b2f4cadf8eb823451c1050ad09e67f56c9776251ae68ff1980b186b135b5d6d5e887c19e27846383a36edb42a085161a69b31c03f9563f6674bd4326a7cee3b
