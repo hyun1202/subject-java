@@ -23,11 +23,8 @@ public class TokenProvider {
     private final long tokenValidityInMilliseconds = 60 * 1000L;
     private final long refreshTokenValidMillisecond = 14 * 24 * 60 * 60 * 1000L;
     private Key key;
-    private final UserDetailsService userDetailsService;
 
-    public TokenProvider(@Value("${jwt.secret}") String secret,
-                         UserDetailsService userDetailsService) {
-        this.userDetailsService = userDetailsService;
+    public TokenProvider(@Value("${jwt.secret}") String secret) {
         byte[] keyBytes = Decoders.BASE64.decode(secret);
         this.key = Keys.hmacShaKeyFor(keyBytes);
     }
@@ -54,14 +51,7 @@ public class TokenProvider {
         return new TokenDto(accessToken, refreshToken);
     }
 
-    public Authentication getAuthentication(String token) {
-        Claims claims = getPayload(token);
-        String email = claims.getId();
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-
-        return new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
-    }
 
     private Claims getPayload(String token) {
         return Jwts.parser()

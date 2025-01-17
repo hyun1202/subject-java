@@ -8,6 +8,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -18,9 +19,16 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 public class SecurityConfig {
 
     private final TokenProvider tokenProvider;
+    private final UserDetailsService userDetailsService;
 
-    public SecurityConfig(TokenProvider tokenProvider) {
+    public SecurityConfig(TokenProvider tokenProvider, UserDetailsService userDetailsService) {
         this.tokenProvider = tokenProvider;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @Bean
+    public JwtFilter jwtFilter() {
+        return new JwtFilter(tokenProvider, userDetailsService);
     }
 
     @Bean
@@ -42,7 +50,7 @@ public class SecurityConfig {
             ;
         });
 
-        http.addFilterAt(new JwtFilter(tokenProvider), BasicAuthenticationFilter.class);
+        http.addFilterAt(jwtFilter(), BasicAuthenticationFilter.class);
 
         return http.build();
     }
